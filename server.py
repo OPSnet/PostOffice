@@ -12,6 +12,7 @@ class Resource(object):
     # noinspection PyMethodMayBeStatic
     def on_get(self, _, resp):
         response = []
+        count = 0
         for entry in os.scandir(DATA_PATH):
             if entry.name == '.gitkeep':
                 continue
@@ -21,6 +22,9 @@ class Resource(object):
                 except json.decoder.JSONDecodeError:
                     pass
             os.remove(entry.path)
+            count += 1
+            if count == 50:
+                break
         resp.body = str.encode(json.dumps(response))
         resp.status = falcon.HTTP_200
 

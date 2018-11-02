@@ -18,13 +18,15 @@ class Handler(object):
         print('Recieved message...')
         # noinspection PyBroadException
         try:
-            with open(os.path.join('messages', str(uuid.uuid4().hex)), 'w') as open_file:
-                message = mailparser.parse_from_string(envelope.content.decode('utf-8'))
+            file_name = os.path.join('messages', str(uuid.uuid4().hex))
+            with open(file_name, 'w') as open_file:
+                content = envelope.original_content.decode('utf-8').replace("\r\r\n", "\r\n")
+                message = mailparser.parse_from_string(content)
                 json.dump({'mail_from': envelope.mail_from,
                            'rcpt_tos': envelope.rcpt_tos,
                            'subject': message.subject,
                            'body': message.body,
-                           'data': envelope.content.decode('utf-8'),
+                           'data': content,
                            'timestamp': datetime.utcnow().isoformat()},
                           open_file)
             return '250 OK'
@@ -42,6 +44,14 @@ if __name__ == '__main__':
     # noinspection PyBroadException
     try:
         controller.start()
-        input("Running smtpd server on {}:{}\n".format(args.host, args.port))
+        pid = str(os.getpid())
+        pidfile = "/run/postoffice/smtpd.pid"
+        open(pidfile, 'w').write(pid)
+        print("Running smtpd server on {}:{}\n".format(args.host, args.port))
+        while True:
+            time.sleep(3)
     except Exception:
+        print(e, file=sys.stderr)
         controller.stop()
+    finally:
+        os.unlink(pidfile)
