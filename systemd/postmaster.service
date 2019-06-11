@@ -1,0 +1,18 @@
+[Unit]
+Description=PostMaster web server
+Requires=postmaster.socket
+After=network.target
+
+[Service]
+PIDFile=/run/postoffice/postmaster.pid
+# User=user
+# Group=group
+RuntimeDirectory=postoffice
+WorkingDirectory=/data/postoffice
+ExecStart=/usr/local/bin/gunicorn --pid /run/postoffice/postmaster.pid --bind unix:/run/postoffice/postmaster.socket server:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

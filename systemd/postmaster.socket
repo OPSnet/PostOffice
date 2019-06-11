@@ -1,0 +1,8 @@
+[Unit]
+Description=PostMaster Socket
+
+[Socket]
+ListenStream=/run/postoffice/postmaster.socket
+
+[Install]
+WantedBy=sockets.target

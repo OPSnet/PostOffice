@@ -4,6 +4,8 @@ import argparse
 from datetime import datetime
 import json
 import os
+import sys
+import time
 import uuid
 
 from aiosmtpd.controller import Controller
@@ -45,13 +47,13 @@ if __name__ == '__main__':
     try:
         controller.start()
         pid = str(os.getpid())
-        pidfile = "/run/postoffice/smtpd.pid"
+        pidfile = "/run/postoffice/postoffice.pid"
         open(pidfile, 'w').write(pid)
         print("Running smtpd server on {}:{}\n".format(args.host, args.port))
         while True:
             time.sleep(3)
-    except Exception:
-        print(e, file=sys.stderr)
+    except Exception as exc:
+        print(exc, file=sys.stderr)
         controller.stop()
     finally:
         os.unlink(pidfile)

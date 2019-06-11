@@ -1,0 +1,17 @@
+[Unit]
+Description=PostOffice SMTPD Daemon
+After=network.target
+
+[Service]
+PIDFile=/run/postoffice/postoffice.pid
+# User=user
+# Group=group
+RuntimeDirectory=postoffice
+WorkingDirectory=/location/to/postoffice
+ExecStart=/usr/bin/python3 -u smtpd.py localhost 12345
+# ExecReload=/bin/kill -s HUP $MAINPID
+# ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

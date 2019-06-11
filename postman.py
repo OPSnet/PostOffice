@@ -48,7 +48,12 @@ def main():
     auth = (args.user, args.password) if 'user' in args else None
     messages = requests.get('http://{}/'.format(args.host), auth=auth).json()
     for message in messages:
-        send_mail(message['rcpt_tos'], message['mail_from'], message['subject'], message['body'])
+        send_mail(
+            message['rcpt_tos'],
+            message['mail_from'],
+            message['subject'],
+            message['body']
+        )
 
 
 if __name__ == '__main__':

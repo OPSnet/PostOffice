@@ -2,3 +2,4 @@ falcon
 aiosmtpd
 gunicorn
 mail-parser
+requests
