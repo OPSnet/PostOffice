@@ -42,8 +42,8 @@ def send_mail(to, fro, subject, text, files=None, server='localhost'):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('host', type=str)
-    parser.add_argument('user', type=str, required=False)
-    parser.add_argument('password', type=str, required=False)
+    parser.add_argument('--user', type=str)
+    parser.add_argument('--password', type=str)
     args = parser.parse_args()
     auth = (args.user, args.password) if 'user' in args else None
     messages = requests.get('http://{}/'.format(args.host), auth=auth).json()
